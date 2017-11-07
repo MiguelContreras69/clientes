@@ -79,16 +79,24 @@ $this->Form->create(null, [
         <button type="button" class="btn btn-danger btn-md" id='eliminarEmail'>Eliminar</button>
     </div>
 </div>
-<div id='replicaTelefono'>
-    <div class="form-group row">
-        <div class="col-md-6 mb-3">
-            <label>Telefono</label>
-            <?= $this->Form->input('telefono', ['label' => false, 'type' => 'phone', 'class' => 'form-control', 'id' => 'telefono', 'placeholder' => 'Escriba su numero telefonico']) ?>
-        </div>
-        <div class="col-md-3 mb-3">
-            <label>Categoria</label>
-            <?php echo $this->Form->input('tel_categoriaid', ['label' => false, 'class' => 'form-control', 'options' => array('Casa', 'Trabajo'), 'empty' => 'Seleccione categoria', 'id' => 'tel_categoriaid', 'required']); ?>
-        </div>
+<div id='replicaTelefono' class="hidden">
+    <!--<div class="form-group row">-->
+    <div class="col-md-6 mb-3">
+        <label>Telefono</label>
+        <?= $this->Form->input('telefono', ['label' => false, 'type' => 'phone', 'class' => 'form-control', 'id' => 'telefono', 'placeholder' => 'Escriba su numero telefonico']) ?>
+    </div>
+    <div class="col-md-3 mb-3">
+        <label>Categoria</label>
+        <?php echo $this->Form->input('tel_categoriaid', ['label' => false, 'class' => 'form-control', 'options' => array('Casa', 'Trabajo'), 'empty' => 'Seleccione categoria', 'id' => 'tel_categoriaid', 'required']); ?>
+    </div>
+
+    <div class="col-md-1 mb-1">
+        <label>&nbsp;</label>
+        <button type="button" class="btn btn-primary btn-md" id='agregarTelefono'>Agregar</button>
+    </div>
+    <div class="col-md-1 mb-1">
+        <label>&nbsp;</label>
+        <button type="button" class="btn btn-danger btn-md" id='eliminarTelefono'>Eliminar</button>
     </div>
 </div>
 
@@ -111,6 +119,7 @@ $this->Form->create(null, [
     var numero = 0;
     var error = '';
     var lineaEmail = 0;
+    var lineaTelefono = 0;
 
     $(document).ready(function () {
 
@@ -131,9 +140,16 @@ $this->Form->create(null, [
         $('#agregarEmail').click(function () {
             nuevoEmail();
         });
+        $('#eliminarTel').click(function () {
+            eliminarTel($('#eliminarTelefono').val());
+        });
+        $('#agregarTelefono').click(function () {
+            nuevoTelefono();
+        });
         // para que añada la linea la primera linea clonada en la forma
         nuevoEmail();
         nuevaLinea();
+        nuevoTelefono();
     });
 
     function eliminarLinea(num) {
@@ -165,7 +181,7 @@ $this->Form->create(null, [
     }
     function nuevoEmail(num) {
         // esto replica el contenido html del div
-        $('#replicaEmail').before('<div class="form-group row" id="mail' + lineaEmail + '" valor="' + lineaEmail + '" style="display:none;">' + $('#replicaEmail').html()+'</div>');
+        $('#replicaEmail').before('<div class="form-group row" id="mail' + lineaEmail + '" valor="' + lineaEmail + '" style="display:none;">' + $('#replicaEmail').html() + '</div>');
         $('#mail' + lineaEmail).slideDown(300);
         // funcion que añade las lineas simliar al clonado de jquery
         programaEmail(lineaEmail);
@@ -177,5 +193,25 @@ $this->Form->create(null, [
         $('#mail' + num + ' #email_categoriaid').attr('name', 'data[Email][' + num + '][email_categoriaid]');
         $('#mail' + num + ' #agregarEmail').attr('onclick', 'nuevoEmail(' + lineaEmail + ')');
         $('#mail' + num + ' #eliminarEmail').attr('onclick', 'deleteEmail(' + lineaEmail + ')');
+    }
+    function eliminarTel(num) {
+        $('#tel' + num).slideUp(300, function () {
+            $(this).remove();
+        });
+    }
+    function nuevoTelefono(num) {
+        // esto replica el contenido html del div
+        $('#replicaTelefono').before('<div class="form-group row" id="tel' + lineaTelefono + '" valor="' + lineaTelefono + '" style="display:none;">' + $('#replicaTelefono').html(), '</div>');
+        $('#tel' + lineaTelefono).slideDown(300);
+        // funcion que añade las lineas simliar al clonado de jquery
+        programaTelefono(lineaTelefono);
+        lineaTelefono++;
+    }
+    function programaTelefono(num)
+    {
+        $('#tel' + num + ' #telefono').attr('name', 'data[Telefono][' + num + '][telefono]');
+        $('#tel' + num + ' #tel_categoriaid').attr('name', 'data[Telefono][' + num + '][tel_categoriaid]');
+        $('#tel' + num + ' #agregarTelefono').attr('onclick', 'nuevoTelefono(' + lineaTelefono + ')');
+        $('#tel' + num + ' #eliminarTelefono').attr('onclick', 'eliminarTel(' + lineaTelefono + ')');
     }
 </script>
